@@ -45,10 +45,9 @@ locals {
       [for id in lookup(local.well_known_az_ids, var.region, [1, 2, 3]) : "${local.az_id_prefix}${id}"]
     )
   )
-  # If an AZ has a single hyphen, it's an AZ ID
-  az_ids = [for az in local.azs : az if length(split("-", az)) == 2]
-  # If an AZ has a two hyphens, it's an AZ name
-  az_names = [for az in local.azs : az if length(split("-", az)) == 3]
+  # AZ IDs always end in "-az<number>" (e.g. use1-az2, usgw1-az1); AZ names don't.
+  az_ids   = [for az in local.azs : az if length(regexall("-az[0-9]+$", az)) > 0]
+  az_names = [for az in local.azs : az if length(regexall("-az[0-9]+$", az)) == 0]
 
   vpc_cidr_prefix = tonumber(split("/", var.vpc_cidr)[1])
   subnet_newbits  = var.subnet_cidr_prefix - local.vpc_cidr_prefix
