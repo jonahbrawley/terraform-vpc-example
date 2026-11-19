@@ -34,3 +34,6 @@ rosa.plan
 .terraformrc
 terraform.rc
 .terraform.lock.hcl
+
+# Output of create-hcp-clusters.sh
+hcp-clusters-summary.txt
